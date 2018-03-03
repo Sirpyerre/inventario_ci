@@ -1,1 +1,3 @@
-# employees_ci
+# Inventario
+
+Base de datos en application/database

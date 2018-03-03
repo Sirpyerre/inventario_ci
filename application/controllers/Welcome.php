@@ -3,23 +3,44 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/user_guide/general/urls.html
-	 */
+	public function __construct() 
+	{
+		parent::__construct();
+		//Cargar helpers
+		$this->load->helper(array('debug_helper','url'));
+		$this->load->model('Rack_model');
+	}
+
 	public function index()
 	{
-		$this->load->view('welcome_message');
+		//titulo de la pagina actual
+		$data['title'] = 'Crear rack';
+		// la vista parcial de donde se genera el contendido de la pagina
+		$data['page'] = 'ubicaciones/index';
+
+		// Layout predefinido de la aplicacion
+		$this->load->view('layouts/app', $data);
 	}
+
+	public function generarRack()
+	{
+		if ($_POST && !empty($_POST)) {
+			$rackModelo = $this->Rack_model;
+			$racks = array();
+
+			$niveles = intval($_POST['niveles']);
+			$ubicaciones = intval($_POST['ubicaciones']);
+
+
+
+			$data['title'] = 'Crear rack';
+			$data['page'] = 'ubicaciones/crear_rack';
+			// $data['racks'] = array(
+			$data['niveles'] = $niveles;
+			$data['ubicaciones'] = $ubicaciones;
+			
+			$this->load->view('layouts/app', $data);
+		}
+	}
+
 }

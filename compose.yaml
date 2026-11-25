@@ -1,0 +1,17 @@
+services:
+  db:
+    image: mariadb:10.5
+    ports:
+      - "127.0.0.1:${INVENTARIO_DB_PORT:-3307}:3306"
+    environment:
+      MARIADB_DATABASE: inventario
+      MARIADB_USER: inventario
+      MARIADB_PASSWORD: ${INVENTARIO_DB_PASSWORD:?Configura INVENTARIO_DB_PASSWORD en .env}
+      MARIADB_ROOT_PASSWORD: ${INVENTARIO_DB_ROOT_PASSWORD:?Configura INVENTARIO_DB_ROOT_PASSWORD en .env}
+    volumes:
+      - inventario-db:/var/lib/mysql
+      - ./application/database/inventario-20180303.sql:/docker-entrypoint-initdb.d/01-inventario.sql:ro
+      - ./application/database/20261124-autopartes.sql:/docker-entrypoint-initdb.d/02-autopartes.sql:ro
+
+volumes:
+  inventario-db:

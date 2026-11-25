@@ -1,53 +1,25 @@
 <?php
-class Rack_model extends CI_Model {
-    public $tabla = 'rack';
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-    /**
-     * Metodo para insertar
-     * @param  [type]
-     * @return [El id que se insertó]
-     */
-    public function crear($datos)
+class Rack_model extends CI_Model
+{
+    public function crear()
     {
-        if (!empty($datos)) 
-        {
-            $fechaHoy = date('Y-m-d H:i:s');
-            $datos['fecha_creacion'] = $fechaHoy;
-            $this->db->insert($this->tabla, $datos);
-
-            return ($this->db->affected_rows() > 0) ? $this->db->insert_id() : false;
+        if (!$this->db->insert('rack', ['nombre' => '', 'fecha_creacion' => date('Y-m-d H:i:s')])) {
+            return false;
         }
 
-
+        $id = $this->db->insert_id();
+        return $this->db->where('id_rack', $id)->update('rack', ['nombre' => 'R'.$id]) ? $id : false;
     }
 
-    /**
-     * Obtiene el valor máximo insertado
-     * @return [type]
-     */
-    public function obtenerMaxId()
+    public function obtener($id)
     {
-        $sql = 'SELECT max(id_rack) AS max FROM ' . $this->tabla . ' WHERE 1=1';
-    
-        $query  = $this->db->query($sql);
-        $result = $query->row_array();
-
-        return isset($result['max']) ? $result['max'] : 0;
+        return $this->db->get_where('rack', ['id_rack' => $id])->row();
     }
 
-    /**
-     * Obtener todos los registros de la tabla
-     * @return [type]
-     */
     public function obtenerRacks()
     {
-        $sql        = 'SELECT * FROM ' . $this->tabla . ' WHERE 1=1';
-    
-        $query  = $this->db->query($sql);
-        $result = $query->result_object();
-
-        return $result;
+        return $this->db->order_by('id_rack')->get('rack')->result();
     }
-
 }
-
